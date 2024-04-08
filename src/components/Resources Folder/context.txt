@@ -1,0 +1,2 @@
+1.create a context as below
+2.wrap the children components with context provider
