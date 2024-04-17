@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "./AuthProvider";
 
 
 const Register = () => {
 
-const {registerUser} = useContext(AuthContext)
+const {registerUser , setUser } = useContext(AuthContext)
+const [error , setError] = useState("")
+const [emailError , setEmailError] = useState("")
 
 
 const handelRegister = (e) =>{
@@ -14,9 +16,44 @@ const handelRegister = (e) =>{
       const email = e.target.email.value;
       const password = e.target.password.value;
       const confirmPassword = e.target.confirmPassword.value;
+        
+     if(!/@gmail\.com$/.test(email)){
+        setEmailError("@gmail.com - hobe")
+        return
+        }
+        setEmailError("")
+      if(password.length < 6){
+        setError("password must be six charecter")
+        return
+      }
+     if(password !== confirmPassword){
+        setError("Did Not Match Password with Confirm Password")
+        return
+      }
+      if(!/[0-9]{2,}$/.test(password)){
+        setError("duita number de last e")
+        return
+      }
+      if(!/[@#%&*$]/.test(password)){
+        setError("HArd kor shala")
+        return
+      }
+      if(!/[a-z]/.test(password)){
+        setError("a to z use koro")
+        return
+      }
+      if(!/[A-Z]/.test(password)){
+        setError("A to Z use koro")
+        return
+      }
+      setError("")
+    //   console.log
       console.log(name, photo , email , password , confirmPassword);
       registerUser(email,password)
-}
+      .then(result => {  setUser(result.user)})
+      .catch(error => setError(error.message.split("/")[1]))
+
+    }
 
 
 
@@ -41,6 +78,7 @@ const handelRegister = (e) =>{
                 <input name="email" type="text" placeholder="Type here"
                 className="input input-bordered w-full " />
             </div>
+            {emailError &&  <small className="text-red-500">{emailError}</small>}
             {/* --------- */}
             <div>
                 <p>Password</p>
@@ -54,6 +92,9 @@ const handelRegister = (e) =>{
                 className="input input-bordered w-full " />
             </div>
             {/* --------- */}
+            {
+                error && <small className="text-red-500">{error}</small>
+            }
 
 
 
